@@ -3,14 +3,12 @@ import { useCheckerStore } from "@/stores/index";
 import { storeToRefs } from "pinia";
 
 const store = useCheckerStore();
-const { gameBoard, gameTurn, selectedPiece, possibleMoves } =
-    storeToRefs(store);
-const { checkGameEnd, playMove, selectPiece } = store;
+const { gameBoard, gameTurn, selectedPiece } = storeToRefs(store);
+const { selectPiece } = store;
 </script>
 
 <template>
     <div class="pt-5 w-full">
-        {{ possibleMoves }}
         <div
             class="flex flex-row justify-center items-center"
             v-for="row in 8"
@@ -22,6 +20,16 @@ const { checkGameEnd, playMove, selectPiece } = store;
                     'cursor-pointer':
                         gameBoard[row - 1][column - 1] === gameTurn ||
                         gameBoard[row - 1][column - 1] === 10,
+                    'bg-orange-900':
+                        (column + row) % 2 === 0 &&
+                        gameBoard[row - 1][column - 1] !== 10 &&
+                        (selectedPiece[0] !== row - 1 ||
+                            selectedPiece[1] !== column - 1),
+                    'bg-gray-200':
+                        (column + row) % 2 === 1 &&
+                        gameBoard[row - 1][column - 1] !== 10 &&
+                        (selectedPiece[0] !== row - 1 ||
+                            selectedPiece[1] !== column - 1),
                     'bg-primary-gray':
                         selectedPiece[0] === row - 1 &&
                         selectedPiece[1] === column - 1,
@@ -31,8 +39,23 @@ const { checkGameEnd, playMove, selectPiece } = store;
                 :key="column"
                 @click="selectPiece([row - 1, column - 1])"
             >
-                <div>
-                    {{ gameBoard[row - 1][column - 1] }}
+                <div class="p-1">
+                    <img
+                        v-if="gameBoard[row - 1][column - 1] === 1"
+                        src="blue.png"
+                    />
+                    <img
+                        v-if="gameBoard[row - 1][column - 1] === -1"
+                        src="red.png"
+                    />
+                    <img
+                        v-if="gameBoard[row - 1][column - 1] === 2"
+                        src="blue-king.png"
+                    />
+                    <img
+                        v-if="gameBoard[row - 1][column - 1] === -2"
+                        src="red-king.png"
+                    />
                 </div>
             </div>
         </div>
