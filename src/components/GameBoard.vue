@@ -3,12 +3,27 @@ import { useCheckerStore } from "@/stores/index";
 import { storeToRefs } from "pinia";
 
 const store = useCheckerStore();
-const { gameBoard, gameTurn, selectedPiece } = storeToRefs(store);
+const {
+    gameBoard,
+    gameTurn,
+    selectedPiece,
+    takingPiece,
+    isTakeAvailable,
+    longestTakeMoves,
+} = storeToRefs(store);
 const { selectPiece } = store;
 </script>
 
 <template>
     <div class="pt-5 w-full">
+        {{ "takingPiece" + takingPiece }}
+        <br /><br />
+        {{ "longestTakeMoves" + longestTakeMoves }}
+        <br /><br />
+        {{ isTakeAvailable }}
+        <br /><br />
+        {{ "takingPiece" + takingPiece }}
+        <br /><br />
         <div
             class="flex flex-row justify-center items-center"
             v-for="row in 8"
@@ -33,7 +48,7 @@ const { selectPiece } = store;
                     'bg-primary-gray':
                         selectedPiece[0] === row - 1 &&
                         selectedPiece[1] === column - 1,
-                    'bg-green-900': gameBoard[row - 1][column - 1] === 10,
+                    'bg-green-700': gameBoard[row - 1][column - 1] === 10,
                 }"
                 v-for="column in 8"
                 :key="column"
