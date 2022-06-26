@@ -15,11 +15,14 @@ export const useCheckerStore = defineStore({
         ] as number[][],
         gameTurn: 1 as 1 | 0 | -1,
         selectedPiece: [-1, -1] as [number, number],
-        takingPiece: [-1, -1] as [number, number],
+        takingPiece: [
+            [-1, -1],
+            [-1, -1],
+        ] as [number[], number[]],
         possibleMoves: [] as any,
-        takenPieces: [] as number[][],
+        takenPieces: [[], []] as [number[], number[]],
         longestTakeMoves: {} as any,
-        isTakeAvailable: false as boolean,
+        isTakeAvailable: [false, false] as [boolean, boolean],
     }),
     actions: {
         playMove(oldIndex: [number, number], newIndex: [number, number]) {
@@ -53,39 +56,14 @@ export const useCheckerStore = defineStore({
             }
         },
         selectPiece(pieceIndex: [number, number]) {
-            if (this.isTakeAvailable && false) {
-                if (
-                    this.gameBoard[pieceIndex[0]][pieceIndex[1]] !== 10 &&
-                    (pieceIndex[0] !== this.takingPiece[0] ||
-                        pieceIndex[1] !== this.takingPiece[1])
-                ) {
-                    return;
-                }
-                if (
-                    this.gameBoard[pieceIndex[0]][pieceIndex[1]] ===
-                    this.gameTurn
-                ) {
-                    this.selectedPiece = pieceIndex;
-                    console.log(this.gameBoard);
-                } else if (
-                    this.gameBoard[pieceIndex[0]][pieceIndex[1]] === 10
-                ) {
-                    this.takingPiece = pieceIndex;
-                    this.isTakeAvailable = true;
-                }
-            } else {
-                if (
-                    this.gameBoard[pieceIndex[0]][pieceIndex[1]] ===
-                    this.gameTurn
-                ) {
-                    this.selectedPiece = pieceIndex;
-                    this.getPossibleMoves();
-                } else if (
-                    this.gameBoard[pieceIndex[0]][pieceIndex[1]] === 10
-                ) {
-                    this.playMove(this.selectedPiece, pieceIndex);
-                    this.checkPossibleTakes(pieceIndex);
-                }
+            if (
+                this.gameBoard[pieceIndex[0]][pieceIndex[1]] === this.gameTurn
+            ) {
+                this.selectedPiece = pieceIndex;
+                this.getPossibleMoves();
+            } else if (this.gameBoard[pieceIndex[0]][pieceIndex[1]] === 10) {
+                this.playMove(this.selectedPiece, pieceIndex);
+                this.checkPossibleTakes(pieceIndex);
             }
         },
         getPossibleMoves() {
@@ -111,7 +89,6 @@ export const useCheckerStore = defineStore({
             }
         },
         checkPossibleTakes(pieceIndex: [number, number]) {
-            this.isTakeAvailable = false;
             const row = pieceIndex[0];
             const column = pieceIndex[1];
             const allPossibleTakes = [
@@ -119,45 +96,17 @@ export const useCheckerStore = defineStore({
                 [row, column - this.gameTurn],
                 [row + this.gameTurn, column],
             ];
+            console.log("allPossibleTakes", allPossibleTakes);
             for (let move of allPossibleTakes) {
-                if (this.gameBoard[move[0]][move[1]] === this.gameTurn) {
-                    const difference = move[0] - row === 0 ? "row" : "column";
-                    if (
-                        difference === "row" &&
-                        this.gameBoard[move[0]][
-                            pieceIndex[1] - this.gameTurn
-                        ] === 0
-                    ) {
-                        this.isTakeAvailable = true;
-                        this.takingPiece[0] = move[0];
-                        this.takingPiece[1] = move[1];
-                        this.longestTakeMoves.push([
-                            move[0],
-                            pieceIndex[1] - this.gameTurn,
-                        ]);
-                    } else if (
-                        difference === "column" &&
-                        this.gameBoard[pieceIndex[0] - this.gameTurn][
-                            move[1]
-                        ] === 0
-                    ) {
-                        this.isTakeAvailable = true;
-                        this.takingPiece[0] = move[0];
-                        this.takingPiece[1] = move[1];
-                        this.longestTakeMoves.push([
-                            pieceIndex[0] - this.gameTurn,
-                            move[1],
-                        ]);
-                    }
-                }
+                //todo: develop an algorithm...
             }
         },
         getLongestTakeMoves(nextMove: [number, number]) {
-            const { longestTakeMoves } = this;
-            const longest = longestTakeMoves.reduce((a, b) => {
-                return a.length > b.length ? a : b;
-            });
-            return longest;
+            // const { longestTakeMoves } = this;
+            // const longest = longestTakeMoves.reduce((a, b) => {
+            //     return a.length > b.length ? a : b;
+            // });
+            // return longest;
         },
     },
     getters: {},

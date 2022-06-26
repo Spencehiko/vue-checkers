@@ -16,14 +16,14 @@ const { selectPiece } = store;
 
 <template>
     <div class="pt-5 w-full">
-        {{ "takingPiece" + takingPiece }}
+        <!-- {{ "takingPiece" + takingPiece }}
         <br /><br />
         {{ "longestTakeMoves" + longestTakeMoves }}
         <br /><br />
         {{ isTakeAvailable }}
         <br /><br />
         {{ "takingPiece" + takingPiece }}
-        <br /><br />
+        <br /><br /> -->
         <div
             class="flex flex-row justify-center items-center"
             v-for="row in 8"
